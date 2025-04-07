@@ -1,4 +1,45 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Helper function to extract and format Google Maps review URL
+    function getReviewUrl(googleMapsUrl) {
+        // Default in case parsing fails
+        if (!googleMapsUrl || typeof googleMapsUrl !== 'string') {
+            return 'https://maps.google.com';
+        }
+        
+        try {
+            // Format 1: https://maps.google.com/?cid=12345
+            if (googleMapsUrl.includes('cid=')) {
+                const cid = googleMapsUrl.split('cid=')[1].split('&')[0];
+                // Note: This format isn't perfect as Google doesn't have a consistent public API
+                // for review links, but it works for many business listings
+                return `https://search.google.com/local/reviews?placeid=ChIJ${cid}`;
+            }
+            
+            // Format 2: https://maps.app.goo.gl/abcXYZ
+            if (googleMapsUrl.includes('maps.app.goo.gl') || googleMapsUrl.includes('goo.gl/maps/')) {
+                // For shortened URLs, direct users to open the link and find the review button
+                return googleMapsUrl;
+            }
+            
+            // Format 3: https://www.google.com/maps/place/...
+            if (googleMapsUrl.includes('/maps/place/')) {
+                // Add parameters to try opening reviews tab
+                return googleMapsUrl + (googleMapsUrl.includes('?') ? '&' : '?') + 'entry=ttu';
+            }
+            
+            // Format 4: If it already contains placeid
+            if (googleMapsUrl.includes('placeid=')) {
+                return googleMapsUrl;
+            }
+            
+            // Default fallback - just return the original URL
+            return googleMapsUrl;
+        } catch (error) {
+            console.error('Error parsing Google Maps URL:', error);
+            return googleMapsUrl;
+        }
+    }
+    
     // Tab Switching
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabPanes = document.querySelectorAll('.tab-pane');
@@ -376,15 +417,41 @@ document.addEventListener('DOMContentLoaded', function() {
             // Simulate email sending delay
             setTimeout(function() {
                 const businessLink = localStorage.getItem('reviewboost-business-link') || 'https://maps.google.com';
+                const reviewUrl = getReviewUrl(businessLink);
+                
+                // Store user data in localStorage (in a real app, this would go to a server)
+                const userData = {
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Save to localStorage (optional)
+                let customers = JSON.parse(localStorage.getItem('reviewboost-customers')) || [];
+                customers.push(userData);
+                localStorage.setItem('reviewboost-customers', JSON.stringify(customers));
                 
                 // Update message
-                formMessage.textContent = 'Email sent successfully! Redirecting to Google Maps...';
+                formMessage.textContent = 'Email sent successfully! Redirecting to Google Maps review page...';
                 
-                // Redirect to Google Maps after a short delay
+                // Redirect to Google Maps review page after a short delay
                 setTimeout(function() {
-                    window.location.href = businessLink;
+                    window.location.href = reviewUrl;
                 }, 1500);
             }, 1500);
         });
+    }
+    
+    // Add helper links to the form for testing
+    const businessLink = localStorage.getItem('reviewboost-business-link');
+    if (businessLink && formMessage) {
+        const testLink = document.createElement('div');
+        testLink.className = 'test-links';
+        testLink.style.marginTop = '15px';
+        testLink.style.fontSize = '0.8em';
+        testLink.style.color = '#666';
+        testLink.innerHTML = '<p><small><strong>Debug:</strong> Direct link to <a href="' + businessLink + '" target="_blank">original Maps link</a> | <a href="' + getReviewUrl(businessLink) + '" target="_blank">review page</a></small></p>';
+        formMessage.after(testLink);
     }
 });
