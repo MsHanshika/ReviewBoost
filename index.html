@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReviewBoost - Elevate Your Business Presence</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <div class="logo">ReviewBoost</div>
+        </header>
+
+        <!-- App Content -->
+        <main>
+            <!-- Intro Section -->
+            <section class="intro">
+                <h1>Elevate Your Business Presence with Ease</h1>
+                <p>Help your small business shine on Google Maps with authentic customer reviews. Turn satisfied customers into vocal advocates in just a few clicks.</p>
+                
+                <div class="feature-cards">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-qrcode"></i></div>
+                        <h3>Custom QR Codes</h3>
+                        <p>Generate QR codes linking directly to your Google Maps review page.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-envelope"></i></div>
+                        <h3>Automated Requests</h3>
+                        <p>Set up automated SMS and email messages to encourage reviews.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- App Demo Section -->
+            <section class="app-demo">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="qr-tab">QR Code Generator</button>
+                    <button class="tab-btn" data-tab="message-tab">Message Templates</button>
+                </div>
+                
+                <div class="tab-content">
+                    <!-- QR Code Generator Tab -->
+                    <div id="qr-tab" class="tab-pane active">
+                        <h2>Generate Your Review QR Code</h2>
+                        <div class="app-form">
+                            <div class="form-group">
+                                <label for="business-name">Business Name:</label>
+                                <input type="text" id="business-name" placeholder="Your Business Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="business-link">Google Maps Business Link:</label>
+                                <input type="text" id="business-link" placeholder="https://maps.google.com/?cid=your-business-id">
+                            </div>
+                            <button class="generate-button" id="generate-qr">Generate QR Code</button>
+                        </div>
+                        <div class="qr-output">
+                            <div id="qr-result">
+                                <div class="qr-placeholder">
+                                    <i class="fas fa-qrcode"></i>
+                                    <p>Your QR code will appear here</p>
+                                </div>
+                            </div>
+                            <div class="qr-instructions">
+                                <h3>How to use your QR code:</h3>
+                                <ol>
+                                    <li>Print and display in your store</li>
+                                    <li>Add to receipts</li>
+                                    <li>Include on business cards</li>
+                                    <li>Share in digital communications</li>
+                                </ol>
+                                <p><strong>When customers scan:</strong> They'll be prompted to provide contact details and then directed to leave a review.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Message Templates Tab -->
+                    <div id="message-tab" class="tab-pane">
+                        <h2>Create Message Templates</h2>
+                        <div class="template-selector">
+                            <button class="template-type active" data-type="sms">SMS Template</button>
+                            <button class="template-type" data-type="email">Email Template</button>
+                        </div>
+                        
+                        <div class="template-editor">
+                            <div class="form-group">
+                                <label for="template-name">Template Name:</label>
+                                <input type="text" id="template-name" placeholder="Post-Purchase Thank You">
+                            </div>
+                            <div class="form-group">
+                                <label for="message-template">Message:</label>
+                                <textarea id="message-template" rows="5" placeholder="Thank you for shopping with us! We'd love to hear about your experience. Please consider leaving us a review on Google Maps: {{REVIEW_LINK}}"></textarea>
+                            </div>
+                            <div class="template-options">
+                                <div class="form-group">
+                                    <label for="delay-time">Send Delay (hours):</label>
+                                    <input type="number" id="delay-time" min="0" max="72" value="24">
+                                </div>
+                                <button class="save-template" id="save-template">Save Template</button>
+                            </div>
+                        </div>
+                        
+                        <div class="saved-templates">
+                            <h3>Your Templates</h3>
+                            <div id="template-list">
+                                <p class="empty-state">No templates yet. Create your first template above.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- App Info Bar -->
+        <div class="app-info-bar">
+            <p>ReviewBoost &copy; 2025</p>
+            <button class="help-button"><i class="fas fa-question-circle"></i> Help</button>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>How to Use ReviewBoost</h2>
+            <div class="help-content">
+                <div class="help-section">
+                    <h3>QR Code Generator</h3>
+                    <p>1. Enter your business name and Google Maps link</p>
+                    <p>2. Click "Generate QR Code"</p>
+                    <p>3. Download and use your custom QR code</p>
+                    <p>4. When scanned, customers will provide contact info and be directed to your review page</p>
+                </div>
+                <div class="help-section">
+                    <h3>Message Templates</h3>
+                    <p>1. Choose SMS or Email template type</p>
+                    <p>2. Create your custom message</p>
+                    <p>3. Set a delay time for when to send after purchase</p>
+                    <p>4. Save your template for future use</p>
+                </div>
+                <div class="help-section">
+                    <h3>Finding Your Google Maps Link</h3>
+                    <p>1. Search for your business on Google Maps</p>
+                    <p>2. Click "Share" and copy the link</p>
+                    <p>3. Paste the link into the QR code generator</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Form Modal (displayed when QR code is scanned) -->
+    <div id="user-form-modal">
+        <div class="user-form-container">
+            <h2>Thank You for Your Interest!</h2>
+            <p>Please provide your contact information to receive updates and special offers:</p>
+            <form class="user-form" id="user-contact-form">
+                <div class="form-group">
+                    <label for="user-name">Full Name:</label>
+                    <input type="text" id="user-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="user-phone">Phone Number:</label>
+                    <input type="tel" id="user-phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="user-email">Email Address:</label>
+                    <input type="email" id="user-email" name="email" required>
+                </div>
+                <button type="submit" class="submit-btn">Continue to Google Review</button>
+            </form>
+            <div id="form-message"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
