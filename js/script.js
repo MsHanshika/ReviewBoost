@@ -1,44 +1,45 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Helper function to extract and format Google Maps review URL
+    // Updated getReviewUrl function for js/script.js
     function getReviewUrl(googleMapsUrl) {
         // Default in case parsing fails
         if (!googleMapsUrl || typeof googleMapsUrl !== 'string') {
-            return 'https://maps.google.com';
+             return 'https://maps.google.com';
         }
-        
+    
         try {
-            // Format 1: https://maps.google.com/?cid=12345
-            if (googleMapsUrl.includes('cid=')) {
-                const cid = googleMapsUrl.split('cid=')[1].split('&')[0];
-                // Note: This format isn't perfect as Google doesn't have a consistent public API
-                // for review links, but it works for many business listings
-                return `https://search.google.com/local/reviews?placeid=ChIJ${cid}`;
-            }
-            
-            // Format 2: https://maps.app.goo.gl/abcXYZ
-            if (googleMapsUrl.includes('maps.app.goo.gl') || googleMapsUrl.includes('goo.gl/maps/')) {
-                // For shortened URLs, direct users to open the link and find the review button
-                return googleMapsUrl;
-            }
-            
-            // Format 3: https://www.google.com/maps/place/...
-            if (googleMapsUrl.includes('/maps/place/')) {
-                // Add parameters to try opening reviews tab
-                return googleMapsUrl + (googleMapsUrl.includes('?') ? '&' : '?') + 'entry=ttu';
-            }
-            
-            // Format 4: If it already contains placeid
-            if (googleMapsUrl.includes('placeid=')) {
-                return googleMapsUrl;
-            }
-            
-            // Default fallback - just return the original URL
-            return googleMapsUrl;
-        } catch (error) {
-            console.error('Error parsing Google Maps URL:', error);
-            return googleMapsUrl;
-        }
-    }
+           // Format 1: https://maps.google.com/?cid=12345
+           if (googleMapsUrl.includes('cid=')) {
+               const cid = googleMapsUrl.split('cid=')[1].split('&')[0];
+                // Direct link to the review dialog using the CID
+                return `https://search.google.com/local/writereview?placeid=${cid}`;
+           }
+        
+           // Format 2: Place ID extraction from URLs containing "place_id"
+           if (googleMapsUrl.includes('place_id=')) {
+              const placeId = googleMapsUrl.split('place_id=')[1].split('&')[0];
+              return `https://search.google.com/local/writereview?placeid=${placeId}`;
+           }
+        
+           // Format 3: https://maps.app.goo.gl/abcXYZ (shortened URLs)
+           if (googleMapsUrl.includes('maps.app.goo.gl') || googleMapsUrl.includes('goo.gl/maps/')) {
+               // For shortened URLs, add parameters to try opening the review dialog
+               return googleMapsUrl + (googleMapsUrl.includes('?') ? '&' : '?') + 'review=1';
+           }
+        
+            // Format 4: https://www.google.com/maps/place/...
+           if (googleMapsUrl.includes('/maps/place/')) {
+              // Add parameters to try opening reviews dialog
+               return googleMapsUrl + (googleMapsUrl.includes('?') ? '&' : '?') + 'review=1';
+           }
+        
+           // Default fallback - just return the original URL with a review parameter
+           return googleMapsUrl + (googleMapsUrl.includes('?') ? '&' : '?') + 'review=1';
+       } catch (error) {
+          console.error('Error parsing Google Maps URL:', error);
+        return googleMapsUrl;
+      }
+  }
     
     // Tab Switching
     const tabBtns = document.querySelectorAll('.tab-btn');
