@@ -23,18 +23,30 @@ document.addEventListener('DOMContentLoaded', function() {
         
            // Format 3: https://maps.app.goo.gl/abcXYZ (shortened URLs)
            if (googleMapsUrl.includes('maps.app.goo.gl') || googleMapsUrl.includes('goo.gl/maps/')) {
-               // For shortened URLs, add parameters to try opening the review dialog
-               return googleMapsUrl + (googleMapsUrl.includes('?') ? '&' : '?') + 'review=1';
+               // For shortened URLs, we need to expand them first
+               // Since we can't do this client-side, we'll append review parameters
+               return googleMapsUrl + (googleMapsUrl.includes('?') ? '&' : '?') + 'review=1&action=write';
            }
         
             // Format 4: https://www.google.com/maps/place/...
            if (googleMapsUrl.includes('/maps/place/')) {
-              // Add parameters to try opening reviews dialog
-               return googleMapsUrl + (googleMapsUrl.includes('?') ? '&' : '?') + 'review=1';
+               // Extract place ID from the URL if present
+               const placeIdMatch = googleMapsUrl.match(/place_id=([^&]+)/);
+               if (placeIdMatch) {
+                   return `https://search.google.com/local/writereview?placeid=${placeIdMatch[1]}`;
+               }
+               // If no place_id, try to extract the place name and add review parameters
+               const placeName = googleMapsUrl.split('/place/')[1].split('/')[0];
+               return `https://www.google.com/maps/place/${placeName}/?review=1&action=write`;
            }
         
-           // Default fallback - just return the original URL with a review parameter
-           return googleMapsUrl + (googleMapsUrl.includes('?') ? '&' : '?') + 'review=1';
+           // Format 5: Direct review URL
+           if (googleMapsUrl.includes('writereview')) {
+               return googleMapsUrl;
+           }
+        
+           // Default fallback - append review parameters
+           return googleMapsUrl + (googleMapsUrl.includes('?') ? '&' : '?') + 'review=1&action=write';
        } catch (error) {
           console.error('Error parsing Google Maps URL:', error);
         return googleMapsUrl;
